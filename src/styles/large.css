@@ -1,0 +1,64 @@
+@media only screen and (min-width: 40rem) {
+  header,
+  main,
+  footer {
+    margin: 12px auto;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px;
+  }
+
+  .header-content {
+    padding: 10px 0;
+  }
+
+  #menu-button {
+    display: none;
+  }
+
+  #navigation {
+    display: block;
+  }
+
+  #navigation ul {
+    display: flex;
+  }
+
+  #navigation a,
+  #navigation span {
+    border-top: none;
+    padding: 16px;
+  }
+
+  .current a {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+
+  #search-form {
+    grid-template-columns: 1fr 150px 110px;
+    align-items: end;
+  }
+
+  #search-form label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  #book-results {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (min-width: 66rem) {
+  #book-results {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

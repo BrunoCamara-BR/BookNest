@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Bruno Câmara dos Santos" />
+  <meta name="description" content="BookNest helps users search for books using Google Books and Open Library." />
+  <link rel="icon" href="/images/book-icon.svg" />
+  <link rel="stylesheet" href="/src/styles/base.css" />
+  <link rel="stylesheet" href="/src/styles/large.css" />
+  <script type="module" src="/src/scripts/main.mjs"></script>
+  <title>BookNest</title>
+</head>
+
+<body>
+  <header>
+    <section class="header-content">
+      <a class="brand" href="index.html">
+        <img src="/images/book-icon.svg" alt="BookNest icon" width="32" height="32" />
+        <span>BookNest</span>
+      </a>
+      <button id="menu-button" aria-label="Open navigation menu"></button>
+    </section>
+    <nav id="navigation">
+      <ul>
+        <li class="current"><a href="#search">Discovery</a></li>
+        <li><span>My Library</span></li>
+        <li><span>About</span></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="search">
+      <h1>Find your next Book</h1>
+      <p>Search two book databases and see the results in one place.</p>
+
+      <form id="search-form">
+        <label for="search-input">Book search</label>
+        <input id="search-input" name="search" type="search" placeholder="Search"
+          required />
+
+        <label for="search-type">Search type</label>
+        <select id="search-type" name="searchType">
+          <option value="keyword">Keyword</option>
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+          <option value="isbn">ISBN</option>
+          <option value="subject">Subject</option>
+        </select>
+
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    <section class="results-section">
+      <h2>Search Results</h2>
+      <div class="api-status">
+        <p><strong>Google Books:</strong> <span id="google-status">Waiting</span></p>
+        <p><strong>Open Library:</strong> <span id="open-library-status">Waiting</span></p>
+      </div>
+      <p id="message">Search for a book to test both APIs.</p>
+      <div id="book-results"></div>
+    </section>
+  </main>
+
+  <footer></footer>
+</body>
+
+</html>
