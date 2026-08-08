@@ -29,7 +29,13 @@ export async function getGoogleBooks(search, type) {
       title: info.title,
       authors: info.authors,
       publishedDate: info.publishedDate,
+      description: info.description,
+      publisher: info.publisher,
+      pageCount: info.pageCount,
+      language: info.language,
+      categories: info.categories,
       cover: info.imageLinks?.thumbnail,
+      previewLink: info.previewLink,
       source: "Google Books"
     });
   });

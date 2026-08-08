@@ -38,8 +38,7 @@
 
       <form id="search-form">
         <label for="search-input">Book search</label>
-        <input id="search-input" name="search" type="search" placeholder="Search"
-          required />
+        <input id="search-input" name="search" type="search" placeholder="Search" minlength="2" required />
 
         <label for="search-type">Search type</label>
         <select id="search-type" name="searchType">
@@ -60,10 +59,52 @@
         <p><strong>Google Books:</strong> <span id="google-status">Waiting</span></p>
         <p><strong>Open Library:</strong> <span id="open-library-status">Waiting</span></p>
       </div>
-      <p id="message">Search for a book to test both APIs.</p>
+      <p id="message" aria-live="polite">Search for a book to test both APIs.</p>
       <div id="book-results"></div>
     </section>
+
+    <section id="details-section" class="hide">
+      <div class="details-heading">
+        <h2>Book Details</h2>
+        <button id="close-details" type="button">Close</button>
+      </div>
+      <div id="book-details">
+        <img id="details-cover" src="/images/book-icon.svg" alt="Book cover" width="120" height="170" />
+        <div>
+          <h3 id="details-title"></h3>
+          <p id="details-author"></p>
+          <p id="details-publisher"></p>
+          <p id="details-date"></p>
+          <p id="details-pages"></p>
+          <p id="details-language"></p>
+          <p id="details-categories"></p>
+          <p id="details-description"></p>
+          <a id="details-link" target="_blank" rel="noopener">Open book source</a>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <template id="book-card-template">
+    <article class="book-card">
+      <img class="book-cover" src="/images/book-icon.svg" alt="Book cover" width="100" height="140" loading="lazy" />
+      <div>
+        <h3 class="book-title"></h3>
+        <p class="book-author"></p>
+        <p class="book-date"></p>
+        <p class="book-source"></p>
+        <div class="book-actions">
+          <select class="reading-status" aria-label="Reading status">
+            <option value="Want to Read">Want to Read</option>
+            <option value="Reading">Reading</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <button class="details-button" type="button">Details</button>
+          <button class="save-button" type="button">Save</button>
+        </div>
+      </div>
+    </article>
+  </template>
 
   <footer></footer>
 </body>

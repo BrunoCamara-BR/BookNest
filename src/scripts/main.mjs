@@ -1,86 +1,103 @@
 import { getGoogleBooks } from "./google-books.mjs";
 import { getOpenLibraryBooks } from "./open-library.mjs";
+import { displayBooks, displayDetails } from "./search-view.mjs";
+import { saveBook } from "./storage.mjs";
 import { startMenu } from "./menu.mjs";
 import { createFooter } from "./footer.mjs";
 
 const form = document.querySelector("#search-form");
 const input = document.querySelector("#search-input");
-const type = document.querySelector("#search-type");
+const searchType = document.querySelector("#search-type");
 const googleStatus = document.querySelector("#google-status");
 const openLibraryStatus = document.querySelector("#open-library-status");
 const message = document.querySelector("#message");
 const results = document.querySelector("#book-results");
+const detailsSection = document.querySelector("#details-section");
+const closeDetails = document.querySelector("#close-details");
+
+let currentBooks = [];
 
 startMenu();
 createFooter();
 
-function displayBooks(books) {
-  results.innerHTML = "";
+form.addEventListener("submit", async function (event) {
+  event.preventDefault();
 
-  if (books.length === 0) {
-    message.textContent = "No books were found.";
+  if (!form.checkValidity()) {
+    form.reportValidity();
     return;
   }
 
-  books.forEach((book) => {
-    const card = document.createElement("article");
-    const image = document.createElement("img");
-    const content = document.createElement("div");
-    const title = document.createElement("h3");
-    const author = document.createElement("p");
-    const date = document.createElement("p");
-    const source = document.createElement("p");
-
-    card.classList.add("book-card");
-    image.src = book.cover || "/images/book-icon.svg";
-    image.alt = book.cover ? `Cover of ${book.title}` : "Book cover not available";
-    image.width = 100;
-    image.height = 140;
-    image.loading = "lazy";
-    title.textContent = book.title;
-    author.textContent = `Author: ${book.authors.join(", ")}`;
-    date.textContent = `Published: ${book.publishedDate}`;
-    source.textContent = `Source: ${book.source}`;
-
-    content.append(title, author, date, source);
-    card.append(image, content);
-    results.appendChild(card);
-  });
-
-  message.textContent = `${books.length} books found.`;
-}
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
   const search = input.value.trim();
 
-  if (!search) return;
+  if (search.length < 2) {
+    message.textContent = "Enter at least 2 characters.";
+    return;
+  }
 
   message.textContent = "Loading books...";
   googleStatus.textContent = "Loading...";
   openLibraryStatus.textContent = "Loading...";
   results.innerHTML = "";
+  detailsSection.classList.add("hide");
 
-  const books = [];
+  let googleBooks = [];
+  let openLibraryBooks = [];
+  let hadError = false;
 
   try {
-    const googleBooks = await getGoogleBooks(search, type.value);
+    googleBooks = await getGoogleBooks(search, searchType.value);
     googleStatus.textContent = `${googleBooks.length} found`;
-    books.push(...googleBooks);
   } catch (error) {
     googleStatus.textContent = "Error";
+    hadError = true;
     console.error(error);
   }
 
   try {
-    const openLibraryBooks = await getOpenLibraryBooks(search, type.value);
+    openLibraryBooks = await getOpenLibraryBooks(search, searchType.value);
     openLibraryStatus.textContent = `${openLibraryBooks.length} found`;
-    books.push(...openLibraryBooks);
   } catch (error) {
     openLibraryStatus.textContent = "Error";
+    hadError = true;
     console.error(error);
   }
 
-  displayBooks(books);
+  currentBooks = googleBooks.concat(openLibraryBooks);
+
+  if (currentBooks.length === 0) {
+    if (hadError) {
+      message.textContent = "There was a problem loading the books.";
+    } else {
+      message.textContent = "No books were found.";
+    }
+    return;
+  }
+
+  displayBooks(currentBooks);
+  message.textContent = `${currentBooks.length} books found.`;
+});
+
+results.addEventListener("click", function (event) {
+  const index = Number(event.target.dataset.index);
+  const book = currentBooks[index];
+
+  if (!book) return;
+
+  if (event.target.classList.contains("details-button")) {
+    displayDetails(book);
+    detailsSection.classList.remove("hide");
+  }
+
+  if (event.target.classList.contains("save-button")) {
+    const card = event.target.closest(".book-card");
+    const status = card.querySelector(".reading-status").value;
+
+    saveBook(book, status);
+    message.textContent = `${book.title} saved as ${status}.`;
+  }
+});
+
+closeDetails.addEventListener("click", function () {
+  detailsSection.classList.add("hide");
 });

@@ -10,7 +10,7 @@ function getQuery(search, type) {
 
 export async function getOpenLibraryBooks(search, type) {
   const query = getQuery(search, type);
-  const fields = "key,title,author_name,first_publish_year,cover_i";
+  const fields = "key,title,author_name,first_publish_year,cover_i,publisher,language,subject";
   const url = `https://openlibrary.org/search.json?${query}&limit=5&fields=${fields}`;
   const response = await fetch(url);
 
@@ -26,7 +26,11 @@ export async function getOpenLibraryBooks(search, type) {
       title: item.title,
       authors: item.author_name,
       publishedDate: item.first_publish_year,
+      publisher: item.publisher?.[0],
+      language: item.language?.[0],
+      categories: item.subject?.slice(0, 5),
       cover,
+      previewLink: item.key ? `https://openlibrary.org${item.key}` : "",
       source: "Open Library"
     });
   });
