@@ -8,14 +8,12 @@ export function startMenu() {
     navigation.classList.toggle("show");
 
     const isOpen = navigation.classList.contains("show");
-    button.setAttribute("aria-expanded", isOpen);
   });
 
   links.forEach(function (link) {
     link.addEventListener("click", function () {
       button.classList.remove("show");
       navigation.classList.remove("show");
-      button.setAttribute("aria-expanded", "false");
     });
   });
 }
