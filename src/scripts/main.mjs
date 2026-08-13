@@ -146,7 +146,6 @@ libraryResults.addEventListener("click", function (event) {
   }
 });
 
-// Apply the filters and sorting selected by the user.
 function getVisibleBooks() {
   let books = currentBooks.slice();
 
@@ -216,8 +215,6 @@ function createLanguageOptions() {
     languageFilter.appendChild(option);
   });
 }
-
-// Read saved books and display the selected library status.
 function showLibrary(clearMessage = true) {
   const library = getLibrary();
 

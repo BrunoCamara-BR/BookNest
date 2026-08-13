@@ -1,6 +1,5 @@
 const storageKey = "booknest-library";
 
-// Read the saved library from localStorage.
 export function getLibrary() {
   const savedBooks = localStorage.getItem(storageKey);
 
