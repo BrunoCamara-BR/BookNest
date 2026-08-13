@@ -13,6 +13,9 @@ export function displayBooks(books) {
 
     image.src = book.cover || "/images/book-icon.svg";
     image.alt = `Cover of ${book.title}`;
+    image.addEventListener("error", function () {
+      image.src = "/images/book-icon.svg";
+    });
 
     card.querySelector(".book-title").textContent = book.title;
     card.querySelector(".book-author").textContent = `Author: ${book.authors.join(", ")}`;
@@ -33,6 +36,9 @@ export function displayDetails(book) {
 
   cover.src = book.cover || "/images/book-icon.svg";
   cover.alt = `Cover of ${book.title}`;
+  cover.addEventListener("error", function () {
+    cover.src = "/images/book-icon.svg";
+  });
 
   document.querySelector("#details-title").textContent = book.title;
   document.querySelector("#details-author").textContent = `Author: ${book.authors.join(", ")}`;
@@ -48,6 +54,7 @@ export function displayDetails(book) {
     link.href = book.previewLink;
     link.classList.remove("hide");
   } else {
+    link.removeAttribute("href");
     link.classList.add("hide");
   }
 }

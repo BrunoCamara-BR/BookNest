@@ -4,6 +4,10 @@
   --text: #111827;
   --border: #8b8b8b;
   --button: #e5e5e5;
+  --accent: #1f2a44;
+  --soft-border: #c8c8c8;
+  --hover: #f2f2f2;
+  --shadow: 0 2px 7px rgb(0 0 0 / 10%);
 }
 
 * {
@@ -12,11 +16,15 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-width: 320px;
   background-color: var(--background);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 header,
@@ -31,6 +39,8 @@ footer,
 main section {
   background-color: var(--section);
   border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
 }
 
 header {
@@ -79,13 +89,21 @@ header {
       list-style: none;
     }
 
-    a,
-    span {
+    a {
       display: block;
       padding: 12px;
       border-top: 1px solid var(--border);
       color: var(--text);
       text-decoration: none;
+
+      transition:
+        background-color 0.2s,
+        color 0.2s;
+
+      &:hover {
+        background-color: var(--hover);
+        color: var(--accent);
+      }
     }
   }
 }
@@ -113,21 +131,13 @@ h2 {
     label {
       font-weight: 700;
     }
-
-    button {
-      background-color: var(--button);
-      cursor: pointer;
-    }
   }
-}
-
-#message {
-  margin-bottom: 16px;
 }
 
 input,
 select,
-button {
+button,
+textarea {
   min-height: 44px;
   padding: 9px;
   border: 1px solid var(--border);
@@ -136,42 +146,104 @@ button {
 }
 
 button {
-  transition: background-color 0.2s;
+  background-color: var(--button);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 
   &:hover {
-    background-color: #d8d8d8;
+    background-color: var(--hover);
+    transform: translateY(-1px);
   }
+
+  &:focus-visible {
+    outline: 3px solid #7893c4;
+    outline-offset: 2px;
+  }
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid #7893c4;
+  outline-offset: 2px;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
 }
 
 .api-status {
   margin-bottom: 14px;
   padding: 10px;
-  border: 1px solid #bcbcbc;
+  border: 1px solid var(--soft-border);
 
   p + p {
     margin-top: 6px;
   }
 }
 
-#book-results {
+.result-options {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 10px;
+  border: 1px solid var(--soft-border);
+
+  div {
+    display: grid;
+    gap: 5px;
+  }
+
+  label {
+    font-weight: 700;
+  }
+}
+
+#message,
+#library-message {
+  margin: 12px 0;
+}
+
+#book-results,
+#library-results {
   display: grid;
   gap: 12px;
 }
 
-.book-card {
+.book-card,
+.library-card {
   display: grid;
   grid-template-columns: 100px 1fr;
   gap: 12px;
   padding: 12px;
+  min-width: 0;
   border: 1px solid var(--border);
-  border-radius: 5px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 8%);
   animation: show-card 0.3s ease;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  > div {
+    min-width: 0;
+  }
 
   img {
     width: 100px;
     height: 140px;
     object-fit: cover;
-    border: 1px solid #bcbcbc;
+    border: 1px solid var(--soft-border);
   }
 
   h3 {
@@ -181,9 +253,17 @@ button {
   p {
     margin-bottom: 6px;
   }
+
+  label {
+    display: grid;
+    gap: 5px;
+    margin-top: 10px;
+    font-weight: 700;
+  }
 }
 
-.book-actions {
+.book-actions,
+.library-actions {
   display: grid;
   gap: 6px;
   margin-top: 10px;
@@ -191,6 +271,29 @@ button {
   select,
   button {
     min-height: 38px;
+  }
+}
+
+.favorite-control {
+  display: flex !important;
+  align-items: center;
+  gap: 8px !important;
+
+  input {
+    min-height: auto;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.library-filter {
+  display: grid;
+  gap: 6px;
+  max-width: 260px;
+  margin-top: 14px;
+
+  label {
+    font-weight: 700;
   }
 }
 
@@ -210,6 +313,11 @@ button {
   }
 }
 
+#details-heading:focus {
+  outline: 3px solid #7893c4;
+  outline-offset: 4px;
+}
+
 #book-details {
   display: grid;
   gap: 16px;
@@ -218,12 +326,25 @@ button {
     width: 120px;
     height: 170px;
     object-fit: cover;
-    border: 1px solid #bcbcbc;
+    border: 1px solid var(--soft-border);
   }
 
   h3,
   p {
     margin-bottom: 8px;
+  }
+
+  a {
+    color: var(--accent);
+  }
+}
+
+#about {
+  border-left: 4px solid var(--accent);
+
+  p {
+    max-width: 48rem;
+    line-height: 1.7;
   }
 }
 

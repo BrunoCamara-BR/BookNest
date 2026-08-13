@@ -5,8 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Bruno Câmara dos Santos" />
-  <meta name="description" content="BookNest helps users search for books using Google Books and Open Library." />
+  <meta name="description" content="BookNest helps users search for books and keep a personal reading list." />
   <link rel="icon" href="/images/book-icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/styles/base.css" />
   <link rel="stylesheet" href="/src/styles/large.css" />
   <script type="module" src="/src/scripts/main.mjs"></script>
@@ -16,25 +19,26 @@
 <body>
   <header>
     <section class="header-content">
-      <a class="brand" href="index.html">
+      <a class="brand" href="#search">
         <img src="/images/book-icon.svg" alt="BookNest icon" width="32" height="32" />
         <span>BookNest</span>
       </a>
-      <button id="menu-button" aria-label="Open navigation menu"></button>
+      <button id="menu-button" aria-label="Open navigation menu" aria-controls="navigation"
+        aria-expanded="false"></button>
     </section>
     <nav id="navigation">
       <ul>
-        <li class="current"><a href="#search">Discovery</a></li>
-        <li><span>My Library</span></li>
-        <li><span>About</span></li>
+        <li><a href="#search">Discovery</a></li>
+        <li><a href="#library">My Library</a></li>
+        <li><a href="#about">About</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
     <section id="search">
-      <h1>Find your next Book</h1>
-      <p>Search two book databases and see the results in one place.</p>
+      <h1>Find a Book</h1>
+      <p>Search two book databases and save titles to your personal reading list.</p>
 
       <form id="search-form">
         <label for="search-input">Book search</label>
@@ -55,17 +59,47 @@
 
     <section class="results-section">
       <h2>Search Results</h2>
+
       <div class="api-status">
         <p><strong>Google Books:</strong> <span id="google-status">Waiting</span></p>
         <p><strong>Open Library:</strong> <span id="open-library-status">Waiting</span></p>
       </div>
+
+      <div id="result-options" class="result-options hide">
+        <div>
+          <label for="source-filter">Source</label>
+          <select id="source-filter">
+            <option value="all">All sources</option>
+            <option value="Google Books">Google Books</option>
+            <option value="Open Library">Open Library</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="language-filter">Language</label>
+          <select id="language-filter">
+            <option value="all">All languages</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="sort-books">Sort</label>
+          <select id="sort-books">
+            <option value="relevance">Relevance</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="year">Publication year</option>
+          </select>
+        </div>
+      </div>
+
       <p id="message" aria-live="polite">Search for a book to test both APIs.</p>
       <div id="book-results"></div>
     </section>
 
     <section id="details-section" class="hide">
       <div class="details-heading">
-        <h2>Book Details</h2>
+        <h2 id="details-heading" tabindex="-1">Book Details</h2>
         <button id="close-details" type="button">Close</button>
       </div>
       <div id="book-details">
@@ -82,6 +116,34 @@
           <a id="details-link" target="_blank" rel="noopener">Open book source</a>
         </div>
       </div>
+    </section>
+
+    <section id="library">
+      <h2>My Library</h2>
+      <p>Books that you save will stay here in this browser.</p>
+
+      <div class="library-filter">
+        <label for="library-status-filter">Show</label>
+        <select id="library-status-filter">
+          <option value="all">All saved books</option>
+          <option value="Want to Read">Want to Read</option>
+          <option value="Reading">Reading</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      <p id="library-message" aria-live="polite"></p>
+      <div id="library-results"></div>
+    </section>
+
+    <section id="about">
+      <h2>About BookNest</h2>
+      <p>
+        BookNest is a simple book discovery and reading tracker. It uses Google Books and
+        Open Library to show book information in one place. Users can search, filter results,
+        view details, and save books with a reading status, favorite mark, and personal note.
+        Saved books are kept in the browser with localStorage.
+      </p>
     </section>
   </main>
 
@@ -101,6 +163,41 @@
           </select>
           <button class="details-button" type="button">Details</button>
           <button class="save-button" type="button">Save</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <template id="library-card-template">
+    <article class="library-card">
+      <img class="library-cover" src="/images/book-icon.svg" alt="Book cover" width="100" height="140" loading="lazy" />
+      <div>
+        <h3 class="library-title"></h3>
+        <p class="library-author"></p>
+        <p class="library-source"></p>
+
+        <label>
+          Reading status
+          <select class="library-status">
+            <option value="Want to Read">Want to Read</option>
+            <option value="Reading">Reading</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </label>
+
+        <label class="favorite-control">
+          <input class="library-favorite" type="checkbox" />
+          Favorite
+        </label>
+
+        <label>
+          Personal note
+          <textarea class="library-note" rows="3" maxlength="250" placeholder="Add a short note"></textarea>
+        </label>
+
+        <div class="library-actions">
+          <button class="library-save-button" type="button">Save changes</button>
+          <button class="remove-button" type="button">Remove</button>
         </div>
       </div>
     </article>
